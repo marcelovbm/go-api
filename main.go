@@ -8,8 +8,8 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 
-	. "github.com/marcelovbm/go-api/controller"
 	. "github.com/marcelovbm/go-api/db"
+	. "github.com/marcelovbm/go-api/routes"
 )
 
 var db = Connection{}
@@ -26,13 +26,12 @@ func init() {
 
 func main() {
 
+	adress := ":" + os.Getenv("PORT")
 	router := mux.NewRouter()
 
-	router.HandleFunc("/user", GetUsers).Methods("GET")
-	router.HandleFunc("/user/{id}", GetUser).Methods("GET")
-	router.HandleFunc("/user", CreateUser).Methods("POST")
-	router.HandleFunc("/user/{id}", DeleteUser).Methods("DELETE")
+	userSubRouter := router.PathPrefix("/users").Subrouter()
+	UserRoutes(userSubRouter)
 
-	log.Fatal(http.ListenAndServe(":8000", router))
+	log.Fatal(http.ListenAndServe(adress, router))
 	log.Println("Application is UP!")
 }
