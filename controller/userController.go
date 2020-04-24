@@ -19,8 +19,16 @@ func respondWithJson(w http.ResponseWriter, code int, payload interface{}) {
 	w.Write(response)
 }
 
-func GetUsers(w http.ResponseWriter, r *http.Request) {}
-func GetUser(w http.ResponseWriter, r *http.Request)  {}
+func GetUsers(w http.ResponseWriter, r *http.Request) {
+	users := dao.GetAllUsers()
+
+	if users == nil {
+		respondWithError(w, http.StatusNotFound, "Invalid request payload")
+	}
+	respondWithJson(w, http.StatusOK, users)
+}
+
+func GetUser(w http.ResponseWriter, r *http.Request) {}
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
